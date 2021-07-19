@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torch.optim as optim
 import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
@@ -37,10 +38,10 @@ def main():
 
     train_loader = DataLoader(
         datasets.__dict__['CIFAR10']('../data', train=True, download=True, transform=transform_train),
-        batch_size=256, shuffle=True, **kwargs)
+        batch_size=128, shuffle=True, **kwargs)
     val_loader = DataLoader(
         datasets.__dict__['CIFAR10']('../data', train=False, transform=transform_test),
-        batch_size=256, shuffle=False, **kwargs)
+        batch_size=128, shuffle=False, **kwargs)
 
     # create model
     model = ResNet(BasicBlock, [3, 4, 6, 3], num_classes=200)
