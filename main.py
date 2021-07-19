@@ -2,7 +2,9 @@ import torch
 import torch.optim as optim
 import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
-import torchvision
+
+import torchvision.datasets as datasets
+import torchvision.transforms as transforms
 
 from model import ResNet
 from train import train, validate
@@ -10,12 +12,12 @@ from train import train, validate
 
 def main():
     # Data loading code
-    train_dataset = torchvision.datasets.MNIST(root='./MNIST_data',
+    train_dataset = datasets.MNIST(root='./MNIST_data',
         train=True, transform=transforms.ToTensor(), download=True)
 
     train_loader = DataLoader(train_dataset, batch_size=64)
 
-    val_dataset = torchvision.datasets.MNIST(root='./MNIST_data',
+    val_dataset = datasets.MNIST(root='./MNIST_data',
         train=False, transform=transforms.ToTensor(), download=True)
 
     val_loader = DataLoader(val_dataset, batch_size=64)
