@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
+from torch.utils.tensorboard import SummaryWriter
 
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
