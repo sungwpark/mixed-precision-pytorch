@@ -13,16 +13,34 @@ from train import train, validate
 
 
 def main():
-    # Data loading code
-    train_dataset = datasets.MNIST(root='./MNIST_data',
-        train=True, transform=transforms.ToTensor(), download=True)
+    ## Data loading code
+    normalize = transforms.Normalize(mean=[x/255.0 for x in [125.3, 123.0, 113.9]],
+                                    std=[x/255.0 for x in [63.0, 62.1, 66.7]])
 
-    train_loader = DataLoader(train_dataset, batch_size=64)
+    transform_train = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Lambda(lambda x: F.pad(x.unsqueeze(0),
+                        (4,4,4,4),mode='reflect').squeeze()),
+        transforms.ToPILImage(),
+        transforms.RandomCrop(32),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        normalize,
+        ])
+        
+    transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        normalize
+        ])
 
-    val_dataset = datasets.MNIST(root='./MNIST_data',
-        train=False, transform=transforms.ToTensor(), download=True)
+    kwargs = {'num_workers': 2, 'pin_memory': True}
 
-    val_loader = DataLoader(val_dataset, batch_size=64)
+    train_loader = DataLoader(
+        datasets.__dict__['CIFAR10']('../data', train=True, download=True, transform=transform_train),
+        batch_size=256, shuffle=True, **kwargs)
+    val_loader = DataLoader(
+        datasets.__dict__['CIFAR10']('../data', train=False, transform=transform_test),
+        batch_size=256, shuffle=False, **kwargs)
 
     # create model
     model = ResNet(BasicBlock, [3, 4, 6, 3], num_classes=200)
@@ -50,9 +68,9 @@ def main():
 
     for epoch in range(epochs):
         # train for one epoch
-        train(train_loader, model, criterion, optimizer, scheduler, scaler, epoch)
+        train(train_loader, model, criterion, optimizer, scheduler, scaler, epoch, writer)
         # evaluate on validation set
-        prec1 = validate(val_loader, model, criterion, epoch)
+        prec1 = validate(val_loader, model, criterion, epoch, writer)
         # remember best prec@1 and save checkpoint
         is_best = prec1 > best_prec1
         best_prec1 = max(prec1, best_prec1)
