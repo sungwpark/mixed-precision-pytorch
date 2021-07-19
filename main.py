@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 
-from model import ResNet
+from model import ResNet, BasicBlock
 from train import train, validate
 
 
