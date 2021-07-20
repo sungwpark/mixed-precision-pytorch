@@ -31,7 +31,6 @@ def train(train_loader, model, criterion, optimizer, scheduler, scaler, epoch, w
         scaler.scale(loss).backward()
         scaler.step(optimizer)
         scaler.update()
-        scheduler.step()
 
         # measure elapsed time
         batch_time.update(time.time() - end)
@@ -44,6 +43,9 @@ def train(train_loader, model, criterion, optimizer, scheduler, scaler, epoch, w
                   'Prec@1 {top1.val:.3f} ({top1.avg:.3f})'.format(
                       epoch, i, len(train_loader), batch_time=batch_time,
                       loss=losses, top1=top1))
+    
+    scheduler.step()
+
     # log to TensorBoard
     writer.add_scalar('train_loss', losses.avg, epoch)
     writer.add_scalar('train_acc', top1.avg, epoch)
