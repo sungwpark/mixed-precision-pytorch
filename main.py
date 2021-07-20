@@ -11,6 +11,7 @@ import torchvision.transforms as transforms
 
 from model import ResNet, BasicBlock
 from train import train, validate
+from utils import save_checkpoint
 
 
 def main():
