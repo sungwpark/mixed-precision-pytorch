@@ -1,3 +1,4 @@
+import torch
 import os
 
 class AverageMeter(object):
