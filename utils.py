@@ -1,5 +1,6 @@
 import torch
 import os
+import shutil
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
